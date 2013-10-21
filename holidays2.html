@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Test</title>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    
+    <style>
+        .holsdiv {
+            
+        }
+        .hols {
+            list-style-type: none;
+            font-family: sans-serif;
+            font-size: 12pt;
+            padding-left: 0px;
+        }
+        .hol {
+            background-color: #eee;
+            line-height: 30px;
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 1px;
+        }
+        .hol:hover {
+            background-color: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="myDiv" class="holsdiv"></div>
+
+<script>
+$.getJSON( "getholidays.php", function( data ) {
+    $("#myDiv").append('<ul class="hols"></ul>');
+    $.each( data, function( i, item ) {
+        $('#myDiv ul').append(
+            $('<li class="hol">').append($('<a>').attr('href','secondpage.html').append(item.title))
+                                .on('click', function(){
+                                                        window.location = $('a', this).attr('href');
+                                                        return false;
+                                                        }))
+    })
+});
+</script>
+
+</body>
+</html>

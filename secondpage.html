@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Second Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css">
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+</head>
+
+<body>
+
+<div data-role="page">
+    
+    <div data-role="header">
+        <h1></h1>
+        <a href="getyears.html" data-icon="home" data-iconpos="left" class="ui-btn-right">Home</a>
+    </div><!-- /header -->
+    
+    <div id="holidaycontent" data-role="content">
+        
+    </div><!-- /content -->
+
+    <div data-role="footer">
+        <h4>Page Footer</h4>
+    </div><!-- /footer -->
+    
+<script>
+$.getJSON( "getholiday.php?holidayid=3", function( data ) {
+    $.each( data, function( i, item ) {
+        $('h1').append(item.title);
+        
+        var hol_start_date = new Date(item.start_date);
+        var hol_end_date = new Date(item.end_date);
+        var days = new Array();
+        var x = -1;
+        for (leg in item.legs) {
+            var sd = new Date(item.legs[leg].start_date);
+            if (x > -1) {
+                days[x] = ((sd - hol_start_date)/1000/60/60/24);
+            }
+            hol_start_date = sd;
+            x++;
+        }
+        days[x] = ((hol_end_date - sd)/1000/60/60/24);
+        
+        $('#holidaycontent').append($('<ul>').attr('id','hcul').attr('data-role','listview').attr('data-count-theme','c').attr('data-inset','true'));
+        for (leg in item.legs) {
+            var daytext = days[leg] == 1 ? ' night' : ' nights';
+            $('#hcul').append($('<li>').text(item.legs[leg].title).append($('<span>').attr('class','ui-li-count').text(days[leg]+daytext)));
+            //$('#hcul').append($('<li>').text(item.legs[leg].title).append($('<p>').attr('class','ui-li-aside').text(days[leg]+daytext)));
+            //alert (item.legs[leg].title + ' ' + days[leg]);
+        }
+        $('#holidaycontent').trigger('create');
+        $('#hcul').listview('refresh');
+    });
+});
+</script>
+
+</div><!-- /page -->
+
+</body>
+</html>

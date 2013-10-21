@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Holidays</title>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <style>
+        #hols   {
+                    background-color: #eee;
+                    font-family: sans-serif;
+                    font-size: 12pt;
+                    text-align: center;
+                    list-style-type: none;
+                    padding-left: 0px;
+                }
+        .hol    {
+                    border: solid 1px;
+                    line-height: 30px;
+                }
+    </style>
+</head>
+
+<body>
+
+<div id="holsdiv"></div>
+
+<script>
+$.getJSON( "getholidays.php", function( data ) {
+    var list = $("#holsdiv").append('<ul id="hols"></ul>').find('ul');
+    $.each( data, function( i, item ) {
+        list.append('<li class="hol" id="' + item.id + '"><a href="nextpage.html">' + item.title + '</a></li>');
+    });
+});
+
+$("#holsdiv ul").on("click", "li", function(){
+    alert("Hello");
+});
+</script>
+
+</body>
+</html>

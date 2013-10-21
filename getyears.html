@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Years</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css">
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+</head>
+
+<body>
+
+<div data-role="page">
+    
+    <div data-role="header">
+        <h1>Page Title</h1>
+    </div><!-- /header -->
+    
+    <div data-role="content">
+        
+        <div id="yearsDiv" data-role="collapsible" data-inset="false" data-collapsed="true" data-theme="b" data-content-theme="d" data-collapsed-icon="arrow-d" data-expanded-icon="arrow-u">
+            <h4>Years</h4>
+            <ul data-role="listview"></ul>
+        </div>
+        
+        <div id="holidaysDiv" data-role="collapsible" data-inset="false" data-theme="b" data-content-theme="d" data-collapsed-icon="arrow-d" data-expanded-icon="arrow-u">
+            <h4>Holidays</h4>
+            <ul data-role="listview"></ul>
+        </div>
+
+    </div><!-- /content -->
+
+    <div data-role="footer">
+        <h4>Page Footer</h4>
+    </div><!-- /footer -->
+
+<script>
+$.getJSON( "getyears.php", function( data ) {
+    /*$("#yearsDiv div").append('<ul data-role="listview"></ul>');*/
+    $.each( data, function( i, item ) {
+        $('#yearsDiv ul').append(
+            $('<li>').append($('<a>').attr('href','#').append(item.year))
+                                .on('click', function(){
+                                                        //window.location = $('a', this).attr('href');
+                                                        showHideListItems(item.year);
+                                                        return false;
+                                                        }))
+    });
+    $('#yearsDiv ul').listview('refresh');
+});
+
+$.getJSON( "getholidays.php", function( data ) {
+    $.each( data, function( i, item ) {
+        $('#holidaysDiv ul').append(
+            $('<li>').attr('id','yr'+item.year+'_'+item.id).append($('<a>').attr('href','secondpage.html').attr('data-transition','slide')
+                                .append(item.title))
+                                .on('click', function(){
+                                                        window.location = $('a', this).attr('href');
+                                                        return false;
+                                                        }))
+    });
+    $('#holidaysDiv ul').listview('refresh');
+});
+
+function doSomeShit(year) {
+    $('#holidaysDiv ul').empty();
+    $.getJSON( "getholidays.php?year=" + year, function( data ) {
+    $.each( data, function( i, item ) {
+        $('#holidaysDiv ul').append(
+            $('<li>').append($('<a>').attr('href','secondpage.html').attr('data-transition','slide')
+                                .append(item.title))
+                                .on('click', function(){
+                                                        window.location = $('a', this).attr('href');
+                                                        return false;
+                                                        }))
+    });
+    $('#holidaysDiv ul').listview('refresh');
+    $('#holidaysDiv').trigger('expand');
+    });
+}
+
+function showHideListItems(year) {
+    $('#holidaysDiv ul li').hide();
+    $('#holidaysDiv ul li').each(function(i){
+        $("[id*=yr"+year+"]").css('display', 'block');
+    });
+    $('#holidaysDiv').trigger('expand');
+}
+</script>
+
+</div><!-- /page -->
+
+</body>
+</html>
